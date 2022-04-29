@@ -32,13 +32,17 @@ export class TodoStore extends ComponentStore<State> {
   }
 
   // selectors
-  readonly todos$ = this.select((state) => {
+  private readonly s$ = this.select((state) => state)
+  readonly todos$ = this.select(this.s$, (state) => {
     return state.todos.ids.map((id) => state.todos.entities[id]) as Todo[]
   })
   private readonly selectedTodoId$ = this.select(
     (state) => state.selectedTodoId
   )
-  private readonly todoEntities$ = this.select((state) => state.todos.entities)
+  private readonly todoEntities$ = this.select(
+    this.s$,
+    (state) => state.todos.entities
+  )
   readonly selectedTodo$ = this.select(
     this.store.select(getUserEntities),
     this.selectedTodoId$,
