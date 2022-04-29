@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { TodoModule } from './todo/todo.module'
 import { UserModule } from './user/user.module'
+import { PostModule } from './post/post.module'
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,6 +21,7 @@ import { UserModule } from './user/user.module'
     EffectsModule.forRoot([]),
     TodoModule,
     UserModule,
+    PostModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
