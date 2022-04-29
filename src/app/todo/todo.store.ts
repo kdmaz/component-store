@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core'
 import { ComponentStore } from '@ngrx/component-store'
 import { createEntityAdapter, EntityState } from '@ngrx/entity'
 import { Store } from '@ngrx/store'
-import { EMPTY } from 'rxjs'
-import { catchError, delay, map } from 'rxjs/operators'
+import { EMPTY, Observable } from 'rxjs'
+import { catchError, delay, tap, switchMap } from 'rxjs/operators'
 import { User } from '../user/user.interface'
 import { getUserEntities } from '../user/user.selectors'
 import { Todo } from './todo.interface'
@@ -76,14 +76,18 @@ export class TodoStore extends ComponentStore<State> {
   )
 
   // effects
-  readonly fetchTodos = this.effect(() => {
-    return this.todoService.fetchTodos$().pipe(
-      delay(1000),
-      map((todos) => this.addTodos(todos)),
-      catchError(() => {
-        console.error('failed to load todos!')
-        return EMPTY
-      })
+  readonly fetchTodos = this.effect((user$: Observable<User>) =>
+    user$.pipe(
+      switchMap((user) =>
+        this.todoService.fetchTodos$(user.id).pipe(
+          delay(1000),
+          tap((todos) => this.addTodos(todos)),
+          catchError(() => {
+            console.error('failed to load todos!')
+            return EMPTY
+          })
+        )
+      )
     )
-  })
+  )
 }

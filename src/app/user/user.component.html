@@ -7,10 +7,15 @@
     <div>email: {{ selectedUser.email }}</div>
     <br />
 
-    <!-- <div>Selected User:</div>
-    <div>Id: {{ selectedUser.user.id }}</div>
-    <div>title: {{ selectedUser.user.title }}</div>
-    <div>completed: {{ selectedUser.user.completed }}</div> -->
+    <div class="selected-user__content">
+      <div class="todos">
+        <h2>Todos:</h2>
+        <app-todo></app-todo>
+      </div>
+      <div class="posts">
+        <h1>Posts:</h1>
+      </div>
+    </div>
   </div>
 
   <ul *ngIf="users$ | async as users">

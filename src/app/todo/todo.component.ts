@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
+import { Observable } from 'rxjs'
+import { User } from '../user/user.interface'
+import { UserStore } from '../user/user.store'
 import { TodoStore } from './todo.store'
 
 @Component({
@@ -11,11 +14,15 @@ import { TodoStore } from './todo.store'
 export class TodoComponent implements OnInit {
   todos$ = this.todoStore.todos$
   selectedTodo$ = this.todoStore.selectedTodo$
+  user$ = this.userStore.selectedUser$
 
-  constructor(private readonly todoStore: TodoStore) {}
+  constructor(
+    private readonly todoStore: TodoStore,
+    private readonly userStore: UserStore
+  ) {}
 
   ngOnInit(): void {
-    this.todoStore.fetchTodos()
+    this.todoStore.fetchTodos(this.user$ as Observable<User>)
   }
 
   handleClick(todoId: number): void {

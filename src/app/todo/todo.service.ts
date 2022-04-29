@@ -9,7 +9,9 @@ import { Todo } from './todo.interface'
 export class TodoService {
   constructor(private readonly http: HttpClient) {}
 
-  fetchTodos$(): Observable<Todo[]> {
-    return this.http.get<Todo[]>('https://jsonplaceholder.typicode.com/todos')
+  fetchTodos$(userId: number): Observable<Todo[]> {
+    return this.http.get<Todo[]>(
+      `https://jsonplaceholder.typicode.com/todos?userId=${userId}`
+    )
   }
 }

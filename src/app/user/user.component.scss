@@ -3,6 +3,11 @@
   padding: 15px;
   border: 2px solid black;
   width: fit-content;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .user-item {
