@@ -1,3 +1,20 @@
-<p>
-  post works!
-</p>
+<ng-container *ngIf="(posts$ | async)?.length; else loading">
+  <div class="selected-post" *ngIf="selectedPost$ | async as selectedPost">
+    <div>Selected Post:</div>
+    <div>Id: {{ selectedPost.id }}</div>
+    <div>title: {{ selectedPost.title }}</div>
+    <div>body: {{ selectedPost.body }}</div>
+  </div>
+
+  <ul *ngIf="posts$ | async as posts">
+    <li
+      *ngFor="let post of posts"
+      (click)="handleClick(post.id)"
+      class="post-item"
+    >
+      {{ post?.title }}
+    </li>
+  </ul>
+</ng-container>
+
+<ng-template #loading>loading...</ng-template>

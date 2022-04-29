@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core'
 import { ComponentStore } from '@ngrx/component-store'
 import { createEntityAdapter, EntityState } from '@ngrx/entity'
-import { Store } from '@ngrx/store'
 import { EMPTY, Observable } from 'rxjs'
 import { catchError, delay, tap, switchMap } from 'rxjs/operators'
 import { User } from '../user/user.interface'
-import { getUserEntities } from '../user/user.selectors'
 import { Todo } from './todo.interface'
 import { TodoService } from './todo.service'
 
@@ -20,10 +18,7 @@ const todoAdapter = createEntityAdapter<Todo>({
 
 @Injectable()
 export class TodoStore extends ComponentStore<State> {
-  constructor(
-    private readonly todoService: TodoService,
-    private readonly store: Store
-  ) {
+  constructor(private readonly todoService: TodoService) {
     // initial state
     super({
       todos: todoAdapter.getInitialState(),
@@ -44,21 +39,15 @@ export class TodoStore extends ComponentStore<State> {
     (state) => state.todos.entities
   )
   readonly selectedTodo$ = this.select(
-    this.store.select(getUserEntities),
     this.selectedTodoId$,
     this.todoEntities$,
-    (userEntities, selectedTodoId, todoEntities) => {
-      if (!selectedTodoId || !userEntities) {
+    (selectedTodoId, todoEntities) => {
+      if (!selectedTodoId) {
         return
       }
 
       const todo = todoEntities[selectedTodoId] as Todo
-      const user = userEntities[todo.userId] as User
-
-      return {
-        todo,
-        user,
-      }
+      return todo
     }
   )
 

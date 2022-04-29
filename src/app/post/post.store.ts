@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core'
 import { ComponentStore } from '@ngrx/component-store'
 import { createEntityAdapter, EntityState } from '@ngrx/entity'
-import { Store } from '@ngrx/store'
-import { EMPTY } from 'rxjs'
-import { catchError, delay, map } from 'rxjs/operators'
+import { EMPTY, Observable } from 'rxjs'
+import { catchError, delay, tap, switchMap } from 'rxjs/operators'
 import { User } from '../user/user.interface'
-import { getUserEntities } from '../user/user.selectors'
 import { Post } from './post.interface'
 import { PostService } from './post.service'
 
@@ -20,10 +18,7 @@ const postAdapter = createEntityAdapter<Post>({
 
 @Injectable()
 export class PostStore extends ComponentStore<State> {
-  constructor(
-    private readonly postService: PostService,
-    private readonly store: Store
-  ) {
+  constructor(private readonly postService: PostService) {
     // initial state
     super({
       posts: postAdapter.getInitialState(),
@@ -44,21 +39,15 @@ export class PostStore extends ComponentStore<State> {
     (state) => state.posts.entities
   )
   readonly selectedPost$ = this.select(
-    this.store.select(getUserEntities),
     this.selectedPostId$,
     this.postEntities$,
-    (userEntities, selectedPostId, postEntities) => {
-      if (!selectedPostId || !userEntities) {
+    (selectedPostId, postEntities) => {
+      if (!selectedPostId) {
         return
       }
 
       const post = postEntities[selectedPostId] as Post
-      const user = userEntities[post.userId] as User
-
-      return {
-        post,
-        user,
-      }
+      return post
     }
   )
 
@@ -76,14 +65,18 @@ export class PostStore extends ComponentStore<State> {
   )
 
   // effects
-  readonly fetchPosts = this.effect(($userIds) => {
-    return this.postService.fetchPosts$().pipe(
-      delay(1000),
-      map((posts) => this.addPosts(posts)),
-      catchError(() => {
-        console.error('failed to load posts!')
-        return EMPTY
-      })
+  readonly fetchPosts = this.effect((user$: Observable<User>) =>
+    user$.pipe(
+      switchMap((user) =>
+        this.postService.fetchPosts$(user.id).pipe(
+          delay(1000),
+          tap((todos) => this.addPosts(todos)),
+          catchError(() => {
+            console.error('failed to load posts!')
+            return EMPTY
+          })
+        )
+      )
     )
-  })
+  )
 }

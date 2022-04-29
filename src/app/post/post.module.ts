@@ -7,5 +7,6 @@ import { PostService } from './post.service'
   imports: [CommonModule],
   declarations: [PostComponent],
   providers: [PostService],
+  exports: [PostComponent],
 })
 export class PostModule {}

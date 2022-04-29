@@ -9,7 +9,9 @@ import { Post } from './post.interface'
 export class PostService {
   constructor(private readonly http: HttpClient) {}
 
-  fetchPosts$(): Observable<Post[]> {
-    return this.http.get<Post[]>('https://jsonplaceholder.typicode.com/posts')
+  fetchPosts$(userId: number): Observable<Post[]> {
+    return this.http.get<Post[]>(
+      `https://jsonplaceholder.typicode.com/posts?userId=${userId}`
+    )
   }
 }

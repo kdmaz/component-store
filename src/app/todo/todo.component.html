@@ -1,15 +1,9 @@
 <ng-container *ngIf="(todos$ | async)?.length; else loading">
   <div class="selected-todo" *ngIf="selectedTodo$ | async as selectedTodo">
     <div>Selected Todo:</div>
-    <div>Id: {{ selectedTodo.todo.id }}</div>
-    <div>title: {{ selectedTodo.todo.title }}</div>
-    <div>completed: {{ selectedTodo.todo.completed }}</div>
-    <br />
-    <div>User:</div>
-    <div>id: {{ selectedTodo.user.id }}</div>
-    <div>name: {{ selectedTodo.user.name }}</div>
-    <div>username: {{ selectedTodo.user.username }}</div>
-    <div>email: {{ selectedTodo.user.email }}</div>
+    <div>Id: {{ selectedTodo.id }}</div>
+    <div>title: {{ selectedTodo.title }}</div>
+    <div>completed: {{ selectedTodo.completed }}</div>
   </div>
 
   <ul *ngIf="todos$ | async as todos">
