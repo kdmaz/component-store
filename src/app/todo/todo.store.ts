@@ -4,6 +4,7 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity'
 import { EMPTY, Observable } from 'rxjs'
 import { catchError, delay, tap, switchMap } from 'rxjs/operators'
 import { User } from '../user/user.interface'
+import { UserStore } from './../user/user.store'
 import { Todo } from './todo.interface'
 import { TodoService } from './todo.service'
 
@@ -18,12 +19,17 @@ const todoAdapter = createEntityAdapter<Todo>({
 
 @Injectable()
 export class TodoStore extends ComponentStore<State> {
-  constructor(private readonly todoService: TodoService) {
+  constructor(
+    private readonly todoService: TodoService,
+    private readonly userStore: UserStore
+  ) {
     // initial state
     super({
       todos: todoAdapter.getInitialState(),
       selectedTodoId: null,
     })
+
+    this.userStore.selectedUser$.subscribe(() => this.reset())
   }
 
   // selectors
@@ -58,13 +64,23 @@ export class TodoStore extends ComponentStore<State> {
   }))
 
   readonly changeSelectedTodo = this.updater(
-    (state, selectedTodoId: number) => ({
+    (state, selectedTodoId: number | null) => ({
       ...state,
       selectedTodoId,
     })
   )
 
   // effects
+
+  readonly reset = this.effect((trigger$) =>
+    trigger$.pipe(
+      tap(() => {
+        this.changeSelectedTodo(null)
+        this.addTodos([])
+      })
+    )
+  )
+
   readonly fetchTodos = this.effect((user$: Observable<User>) =>
     user$.pipe(
       switchMap((user) =>

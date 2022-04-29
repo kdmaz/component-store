@@ -4,6 +4,7 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity'
 import { EMPTY, Observable } from 'rxjs'
 import { catchError, delay, tap, switchMap } from 'rxjs/operators'
 import { User } from '../user/user.interface'
+import { UserStore } from './../user/user.store'
 import { Post } from './post.interface'
 import { PostService } from './post.service'
 
@@ -18,12 +19,17 @@ const postAdapter = createEntityAdapter<Post>({
 
 @Injectable()
 export class PostStore extends ComponentStore<State> {
-  constructor(private readonly postService: PostService) {
+  constructor(
+    private readonly postService: PostService,
+    private readonly userStore: UserStore
+  ) {
     // initial state
     super({
       posts: postAdapter.getInitialState(),
       selectedPostId: null,
     })
+
+    this.userStore.selectedUser$.subscribe(() => this.reset())
   }
 
   // selectors
@@ -58,13 +64,22 @@ export class PostStore extends ComponentStore<State> {
   }))
 
   readonly changeSelectedPost = this.updater(
-    (state, selectedPostId: number) => ({
+    (state, selectedPostId: number | null) => ({
       ...state,
       selectedPostId,
     })
   )
 
   // effects
+  readonly reset = this.effect((trigger$) =>
+    trigger$.pipe(
+      tap(() => {
+        this.changeSelectedPost(null)
+        this.addPosts([])
+      })
+    )
+  )
+
   readonly fetchPosts = this.effect((user$: Observable<User>) =>
     user$.pipe(
       switchMap((user) =>
