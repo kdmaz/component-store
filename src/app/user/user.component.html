@@ -1,0 +1,27 @@
+<ng-container *ngIf="(users$ | async)?.length; else loading">
+  <div class="selected-todo" *ngIf="selectedUser$ | async as selectedUser">
+    <div>User:</div>
+    <div>id: {{ selectedUser.user.id }}</div>
+    <div>name: {{ selectedUser.user.name }}</div>
+    <div>username: {{ selectedUser.user.username }}</div>
+    <div>email: {{ selectedUser.user.email }}</div>
+    <br />
+
+    <!-- <div>Selected User:</div>
+    <div>Id: {{ selectedUser.todo.id }}</div>
+    <div>title: {{ selectedUser.todo.title }}</div>
+    <div>completed: {{ selectedUser.todo.completed }}</div> -->
+  </div>
+
+  <ul *ngIf="users$ | async as users">
+    <li
+      *ngFor="let todo of users"
+      (click)="handleClick(todo.id)"
+      class="todo-item"
+    >
+      {{ todo?.title }}
+    </li>
+  </ul>
+</ng-container>
+
+<ng-template #loading>loading...</ng-template>

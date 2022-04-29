@@ -76,7 +76,7 @@ export class PostStore extends ComponentStore<State> {
   )
 
   // effects
-  readonly fetchPosts = this.effect(() => {
+  readonly fetchPosts = this.effect(($userIds) => {
     return this.postService.fetchPosts$().pipe(
       delay(1000),
       map((posts) => this.addPosts(posts)),

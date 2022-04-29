@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { loadUsers } from '../user/user.actions'
 import { TodoStore } from './todo.store'
 
 @Component({
@@ -14,13 +13,9 @@ export class TodoComponent implements OnInit {
   todos$ = this.todoStore.todos$
   selectedTodo$ = this.todoStore.selectedTodo$
 
-  constructor(
-    private readonly todoStore: TodoStore,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly todoStore: TodoStore) {}
 
   ngOnInit(): void {
-    this.store.dispatch(loadUsers())
     this.todoStore.fetchTodos()
   }
 
