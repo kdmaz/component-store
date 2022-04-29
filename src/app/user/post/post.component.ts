@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
-import { User } from '../user/user.interface'
-import { UserStore } from '../user/user.store'
+import { User } from '../user.interface'
+import { UserStore } from '../user.store'
 import { PostStore } from './post.store'
 @Component({
   selector: 'app-post',
