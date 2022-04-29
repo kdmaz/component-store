@@ -1,25 +1,25 @@
 <ng-container *ngIf="(users$ | async)?.length; else loading">
-  <div class="selected-todo" *ngIf="selectedUser$ | async as selectedUser">
+  <div class="selected-user" *ngIf="selectedUser$ | async as selectedUser">
     <div>User:</div>
-    <div>id: {{ selectedUser.user.id }}</div>
-    <div>name: {{ selectedUser.user.name }}</div>
-    <div>username: {{ selectedUser.user.username }}</div>
-    <div>email: {{ selectedUser.user.email }}</div>
+    <div>id: {{ selectedUser.id }}</div>
+    <div>name: {{ selectedUser.name }}</div>
+    <div>username: {{ selectedUser.username }}</div>
+    <div>email: {{ selectedUser.email }}</div>
     <br />
 
     <!-- <div>Selected User:</div>
-    <div>Id: {{ selectedUser.todo.id }}</div>
-    <div>title: {{ selectedUser.todo.title }}</div>
-    <div>completed: {{ selectedUser.todo.completed }}</div> -->
+    <div>Id: {{ selectedUser.user.id }}</div>
+    <div>title: {{ selectedUser.user.title }}</div>
+    <div>completed: {{ selectedUser.user.completed }}</div> -->
   </div>
 
   <ul *ngIf="users$ | async as users">
     <li
-      *ngFor="let todo of users"
-      (click)="handleClick(todo.id)"
-      class="todo-item"
+      *ngFor="let user of users"
+      (click)="handleClick(user.id)"
+      class="user-item"
     >
-      {{ todo?.title }}
+      {{ user.name }} ({{ user.username }})
     </li>
   </ul>
 </ng-container>

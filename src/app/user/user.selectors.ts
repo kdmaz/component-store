@@ -7,5 +7,5 @@ export const selectUsersState = createFeatureSelector<fromUsers.State>(
 )
 
 const getUserAdapter = createSelector(selectUsersState, ({ users }) => users)
-export const { selectEntities: getUserEntities } =
+export const { selectEntities: getUserEntities, selectAll: getUsers } =
   userAdapter.getSelectors(getUserAdapter)

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
-import { Store } from '@ngrx/store'
 import { TodoStore } from './todo.store'
 
 @Component({

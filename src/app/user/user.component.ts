@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { loadUsers } from './user.actions'
-import { getUserEntities } from './user.selectors'
+import { getUsers } from './user.selectors'
 import { UserStore } from './user.store'
 
 @Component({
@@ -12,7 +12,7 @@ import { UserStore } from './user.store'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnInit {
-  users$ = this.store.select(getUserEntities)
+  users$ = this.store.select(getUsers)
   selectedUser$ = this.userStore.selectedUser$
 
   constructor(
