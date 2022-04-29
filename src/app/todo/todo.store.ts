@@ -24,7 +24,7 @@ export class TodoStore extends ComponentStore<State> {
     private readonly todoService: TodoService,
     private readonly store: Store
   ) {
-    // intialstate
+    // initial state
     super({
       todos: todoAdapter.getInitialState(),
       selectedTodoId: null,
